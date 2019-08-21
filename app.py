@@ -18,10 +18,23 @@ def close_connection(exception):
 def main():
     # return 'hi there!';
     # cur = get_db().cursor()
+    print('In the main page')
     return render_template('main.html');
 
-@app.route('/login')
+@app.route('/login', methods=["POST","GET"])
 def login():
+    if request.method=="POST":
+        print('inside post request')
+        username=request.form['username']
+        password=request.form['password']
+        check = dbhandler.validate(username, password)
+        if check:
+            return 'login success'
+            # print('Success')
+        else :
+            return 'login failed'
+            # print('failed')
+            
     return render_template('login.html');
 
 @app.route('/adminlogin')
@@ -36,6 +49,6 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         dbhandler.insertuser(email, username, password)
-    return render_template('login.html');
+    return render_template('signup.html');
 
 app.run(port="3000", debug=True);
