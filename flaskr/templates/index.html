@@ -1,0 +1,50 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Online examination system</title>
+</head>
+<body>
+    <h1>
+        This is our main page.
+    </h1>
+    <div>
+        {% if g.user != None %}
+            <h2>
+                TEST ARE NOT AVAILABLE
+            </h2>
+        {% endif %}    
+    </div>
+</body>
+</html> -->
+
+{% extends 'base.html' %}
+{% block header %}
+    {% if g.user %}
+        <h1>
+            {% block title %}Dashboard{% endblock %}
+        </h1>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if g.user %} 
+        <form method="POST">
+            <label for="ques">Question</label>
+            <input type="text" name="ques" id="ques" required>
+            <br>
+            <label for="option1">Option 1</label>
+            <input type="text" name="option1" id="option1" required>
+            <br>        
+            <label for="option2">Option 2</label>
+            <input type="text" name="option2" id="option2" required>
+            <br>
+            <label for="option3">Option 3</label>
+            <input type="text" name="option3" id="option3" required>
+            <br>
+            <label for="option4">Option 4</label>
+            <input type="text" name="option4" id="option4" required>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+{% endblock %}
