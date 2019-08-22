@@ -1,11 +1,11 @@
-from flask import Flask, request
-from flask import render_template
-from flask import g
-import sqlite3 
+
+from flask import Flask, request, flash, session, url_for, render_template, g, redirect
+import sqlite3 as sql
 import models as dbhandler
 
 DATABASE = 'database.db'
 app = Flask(__name__)
+app.secret_key = 'supersecret'
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -13,42 +13,53 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+def get_db():
+    con = sql.connect("database.db")
+    return con
 
-@app.route('/')
+@app.route('/', methods=["POST","GET"])
 def main():
-    # return 'hi there!';
-    # cur = get_db().cursor()
     print('In the main page')
+    if request.method == "POST":
+        if request.form['accesslevel'] == 'admin':
+            return redirect(url_for("adminlogin"))
+        elif request.form['accesslevel'] == 'student':
+            return redirect(url_for("studentlogin"))
+
     return render_template('main.html');
 
-@app.route('/login', methods=["POST","GET"])
-def login():
+@app.route('/studentlogin', methods=["POST","GET"])
+def studentlogin():
     if request.method=="POST":
         print('inside post request')
-        username=request.form['username']
+        rollno=request.form['rollno']
         password=request.form['password']
-        check = dbhandler.validate(username, password)
+        check = dbhandler.validate(rollno, password)
         if check:
-            return 'login success'
-            # print('Success')
+            print('student login successfully!')
+            return redirect(url_for("studentpage"))
         else :
-            return 'login failed'
-            # print('failed')
-            
-    return render_template('login.html');
+            print('student login failed!')
+            return redirect(url_for("studentlogin"))
+    return render_template('studentlogin.html');
 
 @app.route('/adminlogin')
 def adminlogin():
     return render_template('adminlogin.html');
 
-@app.route('/signup', methods=["POST", "GET"])
-def signup():
-    print(request)
+@app.route('/studentsignup', methods=["POST", "GET"])
+def studentsignup():
     if request.method == 'POST':
+        rollno = request.form['rollno']
         email = request.form['email']
-        username = request.form['username']
         password = request.form['password']
-        dbhandler.insertuser(email, username, password)
-    return render_template('signup.html');
+        is_already_present = dbhandler.check_duplicate_student(rollno)
+        if is_already_present:
+            print('User: {} already exits'.format(rollno))
+            return redirect(url_for("signup"))
+        dbhandler.insertstudent(rollno, email, password)
+        print('user added successfully!')
+        return redirect(url_for("studentlogin"))
+    return render_template('studentsignup.html');
 
 app.run(port="3000", debug=True);

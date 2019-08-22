@@ -1,13 +1,18 @@
 import sqlite3 as sql
 
-def insertuser(email, username, password):
+def get_db():
     con = sql.connect("database.db")
+    return con
+
+def insertstudent(rollno, email, password):
+    con = get_db()
     cur = con.cursor()
-    cur.execute("INSERT INTO users(email, username, password) VALUES(?, ?, ?)", (email, username, password))
+    cur.execute("INSERT INTO student(ROLLNO, EMAIL, PASSWORD) VALUES(?, ?, ?)", (rollno, email, password))
     con.commit()
+    cur.close()
     con.close()
 
-def validate(username, password):
+def validatestudent(username, password):
     con = sql.connect("database.db")
     print('inside validate')
     check = False
@@ -22,6 +27,23 @@ def validate(username, password):
                 if (password == dbpass):
                     check = True
     return check
+def check_duplicate_student(rollno):
+    con = get_db()
+    print('inside checking duplicate values!')
+    check = False
+    with con:
+        cur = con.cursor()
+        cur.execute("select ROLLNO from student")
+        rows = cur.fetchall()
+        for row in rows:
+            dbrno = row[0]
+            if (dbrno==rollno):
+                check = True
+    # cur.close()
+    print(check)
+    return check
+    
+
 # def displayusers():
 #     con = sql.connect("database.db")
 # 	cur = con.cursor()
