@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block header %}
+    {% if g.user %}
+        <h1>
+            {% block title %}Dashboard{% endblock %}
+        </h1>
+        <ul>
+            <li><a href="{{ url_for('test.addques') }}">Add Ques</a>
+        </ul>
+    {% endif %}
+{% endblock %}
