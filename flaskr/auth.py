@@ -39,7 +39,7 @@ def signup():
                 (email, username, generate_password_hash(password))
             )
             db.commit()
-            return render_template(url_for('auth.login'))
+            return redirect(url_for('auth.login'))
         flash(error)
     return render_template('auth/signup.html')    
 

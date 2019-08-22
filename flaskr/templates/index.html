@@ -1,71 +1,11 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Online examination system</title>
-</head>
-<body>
-    <h1>
-        This is our main page.
-    </h1>
-    <div>
-        {% if g.user != None %}
-            <h2>
-                TEST ARE NOT AVAILABLE
-            </h2>
-        {% endif %}    
-    </div>
-</body>
-</html> -->
-
 {% extends 'base.html' %}
 {% block header %}
     {% if g.user %}
         <h1>
             {% block title %}Dashboard{% endblock %}
         </h1>
-    {% endif %}
-{% endblock %}
-
-{% block content %}
-    {% if g.user %} 
-        <form method="POST">
-            <label for="ques">Question</label>
-            <input type="text" name="ques" id="ques" required>
-            <br>
-            <label for="optionA">Option A</label>
-            <input type="text" name="optionA" id="optionA" required>
-            <br>        
-            <label for="optionB">Option B</label>
-            <input type="text" name="optionB" id="optionB" required>
-            <br>
-            <label for="optionC">Option C</label>
-            <input type="text" name="optionC" id="optionC" required>
-            <br>
-            <label for="optionD">Option D</label>
-            <input type="text" name="optionD" id="optionD" required>
-            <br>
-            <ul>
-                <li>
-                    <label for="A">A</label>
-                    <input type="radio" name="ans" id="A">
-                </li>
-                <li>
-                    <label for="B">B</label>
-                    <input type="radio" name="ans" id="B">
-                </li>
-                <li>
-                    <label for="C">C</label>
-                    <input type="radio" name="ans" id="C">
-                </li>
-                <li>
-                    <label for="D">D</label>
-                    <input type="radio" name="ans" id="D">
-                </li>
-            </ul>
-            <label for="ans"></label>
-            <input type="text" name="ans" id="ans" required>
-            <br>
-            <input type="submit" value="Submit">
-        </form>
+        <ul>
+            <li><a href="{{ url_for('test.addques') }}">Add Ques</a>
+        </ul>
     {% endif %}
 {% endblock %}
